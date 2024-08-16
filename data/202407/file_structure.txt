@@ -1,0 +1,56 @@
+202407
+├── bigwig
+│   ├── 1kb-PC3-DM
+│   │   ├── 1kb_PC3DM_2_1_2_i701_i502_S2__uniq_rmdup_1000.bw
+│   │   ├── 1kb_PC3DM_2_2_6_i702_i502_S6__uniq_rmdup_1000.bw
+│   │   ├── 1kb_PC3DM_2_3_10_i703_i502_S10__uniq_rmdup_1000.bw
+│   │   ├── 1kb_PC3DM_2_4_14_i704_i502_S14__uniq_rmdup_1000.bw
+│   │   └── 1kb_PC3DM_2_5_18_i705_i502_S18__uniq_rmdup_1000.bw
+│   ├── 1kb-PC3-HSR
+│   │   ├── 1kb_PC3HSR_1_1_3_i701_i503_S3__uniq_rmdup_1000.bw
+│   │   ├── 1kb_PC3HSR_1_2_7_i702_i503_S7__uniq_rmdup_1000.bw
+│   │   ├── 1kb_PC3HSR_1_3_11_i703_i503_S11__uniq_rmdup_1000.bw
+│   │   ├── 1kb_PC3HSR_1_4_15_i704_i503_S15__uniq_rmdup_1000.bw
+│   │   └── 1kb_PC3HSR_1_5_19_i705_i503_S19__uniq_rmdup_1000.bw
+│   ├── DM
+│   │   ├── 13_i704_i501_S13__uniq_rmdup_10000.bw
+│   │   ├── 17_i705_i501_S17_uniq_rmdup_10000.bw
+│   │   ├── 1_i701_i501_S1__uniq_rmdup_10000.bw
+│   │   ├── 5_i702_i501_S5__uniq_rmdup_10000.bw
+│   │   ├── 9_i703_i501_S9__uniq_rmdup_10000.bw
+│   │   └── ReadMe.md
+│   ├── HL-60
+│   │   ├── 11_i703_i503_S11__uniq_rmdup_10000.bw
+│   │   ├── 15_i704_i503_S15__uniq_rmdup_10000.bw
+│   │   ├── 19_i705_i503_S19__uniq_rmdup_10000.bw
+│   │   ├── 3_i701_i503_S3__uniq_rmdup_10000.bw
+│   │   ├── 7_i702_i503_S7__uniq_rmdup_10000.bw
+│   │   └── ReadMe.md
+│   ├── HSR
+│   │   ├── 13_i704_i501_S13__uniq_rmdup_10000.bw
+│   │   ├── 17_i705_i501_S17__uniq_rmdup_10000.bw
+│   │   ├── 1_i701_i501_S1__uniq_rmdup_10000.bw
+│   │   ├── 5_i702_i501_S5__uniq_rmdup_10000.bw
+│   │   ├── 9_i703_i501_S9__uniq_rmdup_10000.bw
+│   │   └── ReadMe.md
+│   ├── PC3-DM
+│   │   ├── PC3DM_2_1_2_i701_i502_S2__uniq_rmdup_10000 (1).bw
+│   │   ├── PC3DM_2_2_6_i702_i502_S6__uniq_rmdup_10000 (1).bw
+│   │   ├── PC3DM_2_3_10_i703_i502_S10__uniq_rmdup_10000 (1).bw
+│   │   ├── PC3DM_2_4_14_i704_i502_S14__uniq_rmdup_10000.bw
+│   │   ├── PC3DM_2_5_18_i705_i502_S18__uniq_rmdup_10000.bw
+│   │   └── ReadMe.md
+│   ├── PC3-HSR
+│   │   ├── PC3HSR_1_1_3_i701_i503_S3__uniq_rmdup_10000 (1).bw
+│   │   ├── PC3HSR_1_2_7_i702_i503_S7__uniq_rmdup_10000 (1).bw
+│   │   ├── PC3HSR_1_3_11_i703_i503_S11__uniq_rmdup_10000.bw
+│   │   ├── PC3HSR_1_4_15_i704_i503_S15__uniq_rmdup_10000.bw
+│   │   ├── PC3HSR_1_5_19_i705_i503_S19__uniq_rmdup_10000.bw
+│   │   └── ReadMe.md
+│   └── RPE-1
+│       ├── 10_i703_i502_S10__uniq_rmdup_10000.bw
+│       ├── 14_i704_i502_S14__uniq_rmdup_10000.bw
+│       ├── 18_i705_i502_S18__uniq_rmdup_10000.bw
+│       ├── 2_i701_i502_S2__uniq_rmdup_10000.bw
+│       ├── 6_i702_i502_S6__uniq_rmdup_10000.bw
+│       └── ReadMe.md

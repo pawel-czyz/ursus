@@ -1,0 +1,10 @@
+*.bw
+*.csv
+*.tsv
+*.npy
+*.npz
+
+*.pdf
+*.svg
+
+.snakemake/
