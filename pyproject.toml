@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ursus"
+version = "0.1.0"
+description = ""
+authors = ["Author <author@author.com>"]
+readme = "README.md"
+packages = [{include = "ursus", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10,<3.11"
+numpy = "^2.0.1"
+matplotlib = "^3.9.2"
+seaborn = "^0.13.2"
+pybigwig = "^0.3.23"
+pulp = "<2.8"
+snakemake = "<8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
