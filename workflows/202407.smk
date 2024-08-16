@@ -8,10 +8,6 @@ import ursus.region_plotter as rp
 workdir: "data/202407"
 
 
-# All cell lines for which the data can be preprocessed:
-# see the rules at the bottom of the file
-CELL_LINES = ("RPE-1", "HSR", "DM", "HL-60", "PC3-DM", "PC3-HSR")
-
 
 @dataclasses.dataclass
 class Settings:
@@ -20,23 +16,111 @@ class Settings:
 
 
 SETTINGS = {
-    "chr20-all": Settings(
+    "chr20-40-50-all": Settings(
         region=rp.RegionSettings(
             start=40_000_000,
             end=50_000_000,
             bin_length=10_000,
             chromosome="20",
         ),
-        cell_lines=list(CELL_LINES),
-    )
-    
-    
+        cell_lines=["RPE-1", "HSR", "DM", "HL-60", "PC3-DM", "PC3-HSR"],
+    ),
+    "chr8-124-131-all": Settings(
+        region=rp.RegionSettings(
+            start=124_000_000,
+            end=131_000_000,
+            bin_length=10_000,
+            chromosome="8",
+        ),
+        cell_lines=["RPE-1", "HSR", "DM", "HL-60", "PC3-DM", "PC3-HSR"],
+    ),
+    "chr8-126-128-all": Settings(
+        region=rp.RegionSettings(
+            start=126_400_000,
+            end=128_000_000,
+            bin_length=10_000,
+            chromosome="8",
+        ),
+        cell_lines=["RPE-1", "HSR", "DM", "HL-60", "PC3-DM", "PC3-HSR"],
+    ),
+    "chr8-118-142": Settings(
+        region=rp.RegionSettings(
+            start=118_800_000,
+            end=142_000_000,
+            bin_length=10_000,
+            chromosome="8",
+        ),
+        cell_lines=["RPE-1", "HSR", "DM", "HL-60", "PC3-DM", "PC3-HSR"],
+    ),
+    "chr20-40-50-10kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=50_000_000,
+            bin_length=10_000,
+            chromosome="20",
+        ),
+        cell_lines=["PC3-DM", "PC3-HSR"],
+    ),
+    "chr20-40-50-1kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=50_000_000,
+            bin_length=1_000,
+            chromosome="20",
+        ),
+        cell_lines=["1kb-PC3-DM", "1kb-PC3-HSR"],
+    ),
+
+    "chr20-2Mb-10kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=42_000_000,
+            bin_length=10_000,
+            chromosome="20",
+        ),
+        cell_lines=["PC3-DM", "PC3-HSR"],
+    ),
+    "chr20-2Mb-1kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=42_000_000,
+            bin_length=1_000,
+            chromosome="20",
+        ),
+        cell_lines=["1kb-PC3-DM", "1kb-PC3-HSR"],
+    ),
+    "chr20-2Mb-10kb-1kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=42_000_000,
+            bin_length=10_000,
+            chromosome="20",
+        ),
+        cell_lines=["1kb-PC3-DM", "1kb-PC3-HSR"],
+    ),
+    "chr20-2Mb-20kb-1kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=42_000_000,
+            bin_length=20_000,
+            chromosome="20",
+        ),
+        cell_lines=["1kb-PC3-DM", "1kb-PC3-HSR"],
+    ),
+    "chr20-2Mb-50kb-1kb": Settings(
+        region=rp.RegionSettings(
+            start=40_000_000,
+            end=42_000_000,
+            bin_length=50_000,
+            chromosome="20",
+        ),
+        cell_lines=["1kb-PC3-DM", "1kb-PC3-HSR"],
+    ),
 }
+
 
 rule all:
     input: expand("figures/{settings}.pdf", settings=SETTINGS)
-
-
 
 
 def _get_files(wildcards):
@@ -176,6 +260,42 @@ rule:
         prefix = "",
         label= "HSR PC3"
     input: expand("bigwig/PC3-HSR/{fname}", fname=PC3_HSR_FILES)
+    run:
+        array = rp.get_multiarray(files=list(input), settings=SETTINGS[wildcards.settings].region, chromosome_prefix=params.prefix)
+        np.savez(file=str(output), array=array, label=params.label)
+
+
+ONE_KB_PC3_DM_FILES = [
+    "1kb_PC3DM_2_1_2_i701_i502_S2__uniq_rmdup_1000.bw",
+    "1kb_PC3DM_2_2_6_i702_i502_S6__uniq_rmdup_1000.bw",
+    "1kb_PC3DM_2_3_10_i703_i502_S10__uniq_rmdup_1000.bw",
+    "1kb_PC3DM_2_4_14_i704_i502_S14__uniq_rmdup_1000.bw",
+    "1kb_PC3DM_2_5_18_i705_i502_S18__uniq_rmdup_1000.bw",
+]
+rule:
+    output: "arrays/{settings}/1kb-PC3-DM.npz"
+    params:
+        prefix = "",
+        label = "PC3-DM (1kb)"
+    input: expand("bigwig/1kb-PC3-DM/{fname}", fname=ONE_KB_PC3_DM_FILES)
+    run:
+        array = rp.get_multiarray(files=list(input), settings=SETTINGS[wildcards.settings].region, chromosome_prefix=params.prefix)
+        np.savez(file=str(output), array=array, label=params.label)
+
+
+ONE_KB_PC3_HSR_FILES = [
+    "1kb_PC3HSR_1_1_3_i701_i503_S3__uniq_rmdup_1000.bw",
+    "1kb_PC3HSR_1_2_7_i702_i503_S7__uniq_rmdup_1000.bw",
+    "1kb_PC3HSR_1_3_11_i703_i503_S11__uniq_rmdup_1000.bw",
+    "1kb_PC3HSR_1_4_15_i704_i503_S15__uniq_rmdup_1000.bw",
+    "1kb_PC3HSR_1_5_19_i705_i503_S19__uniq_rmdup_1000.bw",
+]
+rule:
+    output: "arrays/{settings}/1kb-PC3-HSR.npz"
+    params:
+        prefix = "",
+        label = "PC3-HSR (1kb)"
+    input: expand("bigwig/1kb-PC3-HSR/{fname}", fname=ONE_KB_PC3_HSR_FILES)
     run:
         array = rp.get_multiarray(files=list(input), settings=SETTINGS[wildcards.settings].region, chromosome_prefix=params.prefix)
         np.savez(file=str(output), array=array, label=params.label)
