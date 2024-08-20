@@ -1,5 +1,7 @@
 import dataclasses
 import numpy as np
+from scipy.signal import savgol_filter
+from scipy.ndimage import gaussian_filter
 import matplotlib
 matplotlib.use("agg")
 
@@ -120,7 +122,7 @@ SETTINGS = {
 
 
 rule all:
-    input: expand("figures/{settings}.pdf", settings=SETTINGS)
+    input: expand("figures/{mode}/{settings}.pdf", settings=SETTINGS, mode=["none", "savgol", "gauss"])
 
 
 def _get_files(wildcards):
@@ -130,7 +132,7 @@ def _get_files(wildcards):
 
 rule plot_region:
     input: _get_files
-    output: "figures/{settings}.pdf"
+    output: "figures/{mode}/{settings}.pdf"
     params:
         dpi = 450
     run:
@@ -138,7 +140,16 @@ rule plot_region:
         labels = []
         for fname in input:
             archive = np.load(fname)
-            arrays.append(archive["array"])
+            arr = archive["array"]
+            if wildcards.mode == "none":
+                pass
+            elif wildcards.mode == "gauss":
+                arr = gaussian_filter(arr, mode="nearest", sigma=5, axes=-1)
+            elif wildcards.mode == "savgol":
+                arr = savgol_filter(arr, window_length=10, polyorder=3, mode="nearest", axis=-1)
+            else:
+                raise ValueError("Smoothing mode not known.")
+            arrays.append(arr)
             labels.append(archive["label"])
         
         fig, _ = rp.plot_arrays(arrays=arrays, labels=labels, settings=SETTINGS[wildcards.settings].region, dpi=int(params.dpi))
