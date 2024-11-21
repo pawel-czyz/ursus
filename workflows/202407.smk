@@ -1,3 +1,6 @@
+# =======================================================
+# == Plotting S-phase heatmaps with optional smoothing ==
+# =======================================================
 import dataclasses
 import numpy as np
 from scipy.signal import savgol_filter
