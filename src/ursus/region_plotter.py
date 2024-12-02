@@ -22,7 +22,8 @@ def get_binned_array(
         fname: str,
         settings: RegionSettings,
         chromosome_prefix: str,
-    ):
+        replace_nan: bool = True,
+    ) -> np.ndarray:
     if settings.end <= settings.start:
         raise ValueError("End can't be less than start.")
 
@@ -31,12 +32,17 @@ def get_binned_array(
     
     n_intervals = (settings.end - settings.start) // settings.bin_length
     
+    if n_intervals < 1:
+        raise ValueError(f"Too few intervals for start={settings.start}, end={settings.end}, bin_length={settings.bin_length}.")
+
     bw = pyBigWig.open(fname)
     
     a = np.asarray(
         bw.values(_chromosome_name(settings=settings, prefix=chromosome_prefix), settings.start, settings.end),
         dtype=np.float64,
     )
+    if replace_nan:
+        a = np.nan_to_num(a, copy=True, nan=0.0)
 
     binned = []
     for i in range(n_intervals):
@@ -52,8 +58,6 @@ def get_multiarray(files: list[str], settings: RegionSettings, chromosome_prefix
         get_binned_array(fname, settings=settings, chromosome_prefix=chromosome_prefix)
         for fname in files
     ]
-    big_arr = np.stack(arrs)
-    
     normalized = big_arr / big_arr.sum(axis=0, keepdims=True)
     return normalized
 
