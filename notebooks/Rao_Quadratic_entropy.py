@@ -142,7 +142,7 @@ DM_FILES = [
     "13_i704_i501_S13__uniq_rmdup_10000.bw",
     "17_i705_i501_S17_uniq_rmdup_10000.bw",
 ]
-DM_FILES = [f"data/202407/bigwig/DM/{fl}" for fl in DM_FILES]
+DM_FILES = [f"../data/202407/bigwig/DM/{fl}" for fl in DM_FILES]
 
 HSR_FILES = [
     "1_i701_i501_S1__uniq_rmdup_10000.bw",
@@ -151,7 +151,7 @@ HSR_FILES = [
     "13_i704_i501_S13__uniq_rmdup_10000.bw",
     "17_i705_i501_S17__uniq_rmdup_10000.bw",
 ]
-HSR_FILES = [f"data/202407/bigwig/HSR/{fl}" for fl in HSR_FILES]
+HSR_FILES = [f"../data/202407/bigwig/HSR/{fl}" for fl in HSR_FILES]
 
 RPE1_FILES = [
     "2_i701_i502_S2__uniq_rmdup_10000.bw",
@@ -160,7 +160,7 @@ RPE1_FILES = [
     "14_i704_i502_S14__uniq_rmdup_10000.bw",
     "18_i705_i502_S18__uniq_rmdup_10000.bw",
 ]
-RPE1_FILES = [f"data/202407/bigwig/RPE-1/{fl}" for fl in RPE1_FILES]
+RPE1_FILES = [f"../data/202407/bigwig/RPE-1/{fl}" for fl in RPE1_FILES]
 
 
 def get_arrays_from_settings(settings, option):
@@ -194,50 +194,46 @@ def get_entropy_from_settings(settings, option, entropy_type: str):
         raise ValueError("Entropy not known")
 
 
-def create_settings(chromosome, start):
-    _frame_length = 1_600_000
+def create_settings(chromosome, start, frame_length: int = 4_300_000):
     _bin_length = 10_000
-
-    # _frame_length = 10_000_000
-    # _bin_length = 50_000
 
     return rp.RegionSettings(
         chromosome=chromosome,
         start=start,
-        end=start + _frame_length,
+        end=start + frame_length,
         bin_length=_bin_length,
     )
 
 
 all_settings = [
-    create_settings("8", 126_400_000),
+    create_settings("8", 126_400_000, frame_length=1_600_000),
     #
-    create_settings("8", 2_000_000),
-    create_settings("8", 15_000_000),
-    create_settings("8", 24_000_000),
-    create_settings("8", 107_000_000),
-    create_settings("8", 120_000_000),
+    create_settings("2", 20_000_000),
+    create_settings("3", 15_000_000),
+    # create_settings("8", 24_000_000),
+    # create_settings("8", 107_000_000),
+    # create_settings("8", 120_000_000),
     # create_settings("8", 130_000_000),
     # create_settings("8", 132_000_000),
     # create_settings("8", 140_000_000),
 ]
 
+# +
 spacing = 10
 _min = 5
-_sub = 3
+_sub = 8
 
 all_settings = (
-    [create_settings("8", 126_400_000)]
-    +
-    #
-    [create_settings("1", i * 1_000_000) for i in range(_min, 245 - _sub, spacing)]
+    [create_settings("8", 126_400_000, frame_length=1_600_000)]
+    + [create_settings("1", i * 1_000_000) for i in range(_min, 245 - _sub, spacing)]
     + [create_settings("2", i * 1_000_000) for i in range(_min, 240 - _sub, spacing)]
     + [create_settings("3", i * 1_000_000) for i in range(_min, 197 - _sub, spacing)]
     + [create_settings("4", i * 1_000_000) for i in range(_min, 190 - _sub, spacing)]
     + [create_settings("5", i * 1_000_000) for i in range(_min, 178 - _sub, spacing)]
     + [create_settings("6", i * 1_000_000) for i in range(_min, 168 - _sub, spacing)]
     + [create_settings("7", i * 1_000_000) for i in range(_min, 156 - _sub, spacing)]
-    + [create_settings("8", i * 1_000_000) for i in range(_min, 144 - _sub, spacing)]
+    + [create_settings("8", i * 1_000_000) for i in range(_min, 126 - _sub, spacing)]
+    + [create_settings("8", i * 1_000_000) for i in range(130, 144 - _sub, spacing)]
     + [create_settings("9", i * 1_000_000) for i in range(_min, 138 - _sub, spacing)]
     + [create_settings("10", i * 1_000_000) for i in range(_min, 133 - _sub, spacing)]
     + [create_settings("11", i * 1_000_000) for i in range(_min, 132 - _sub, spacing)]
@@ -262,10 +258,17 @@ fig_design = [
 ]
 
 # +
-RECALCULATE = False
+RECALCULATE = True
+
+import pickle
+from pathlib import Path
 
 arrays = {k: [] for k, _ in fig_design}
 valids = {k: [] for k, _ in fig_design}
+
+
+arrays_f = Path("arrays.npz")
+valids_f = Path("valids.npz")
 
 if RECALCULATE:
     print("Recalculating the arrays... This will take a while...")
@@ -275,15 +278,19 @@ if RECALCULATE:
             arr, val = get_arrays_from_settings(settings, cell_line)
             arrays[cell_line].append(arr)
             valids[cell_line].append(val)
-
+    
     # Save the arrays to the disk
-    np.savez("arrays.npz", **arrays)
-    np.savez("valids.npz", **valids)
+    with open(arrays_f, "wb") as handle:
+         pickle.dump(arrays, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    with open(valids_f, "wb") as handle:
+         pickle.dump(valids, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 else:
     print("Loading the data from the disk.")
-    arrays = dict(np.load("arrays.npz"))
-    valids = dict(np.load("valids.npz"))
+    with open(arrays_f, "rb") as handle:
+        arrays = pickle.load(handle)
+    with open(valids_f, "rb") as handle:
+        valids = pickle.load(handle)
 
 # +
 import matplotlib.pyplot as plt
@@ -668,4 +675,3 @@ ax.legend(frameon=False)
 
 fig.tight_layout()
 fig.savefig("/tmp/figura-plot.png", dpi=350)
-# -
